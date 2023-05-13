@@ -27,7 +27,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   id?: number;
 
    // the countries array for the select
-   countries?: Country[];
+   countries?: Observable<Country[]>;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -75,16 +75,14 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   }
   loadCountries() {
     // fetch all the countries from the server
-      this.cityService.getCountries(
+    this.countries = this.cityService.getCountries(
         0,
         9999,
         "name",
         "asc",
         null,
         null,
-        ).subscribe(result => {
-      this.countries = result.data;
-    }, error => console.error(error));
+        ).pipe(map(x => x.data));
   }
   onSubmit() {
     var city = (this.id) ? this.city : <City>{};
