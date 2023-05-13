@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { City } from './city';
 import { MatSort } from '@angular/material/sort';
@@ -23,10 +24,22 @@ export class CitiesComponent implements OnInit {
   filterQuery?:string;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  filterTextChanged: Subject<string> = new Subject<string>();
   constructor(private http: HttpClient) {
   }
   ngOnInit() {
     this.loadData();
+  }
+   // debounce filter text changes
+   onFilterTextChanged(filterText: string) {
+    if (this.filterTextChanged.observers.length === 0) {
+      this.filterTextChanged
+        .pipe(debounceTime(1000), distinctUntilChanged())
+        .subscribe(query => {
+          this.loadData(query);
+        });
+    }
+    this.filterTextChanged.next(filterText);
   }
   loadData(query?: string) {
     var pageEvent = new PageEvent();
