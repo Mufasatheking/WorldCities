@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+
+import { AuthService } from '../auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav-menu',
@@ -6,10 +10,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./nav-menu.component.scss']
 })
 export class NavMenuComponent implements OnInit {
-
-  constructor() { }
+  private destroySubject = new Subject();
+  isLoggedIn: boolean = false;
+  constructor(private authService: AuthService,
+    private router: Router) {
+    this.authService.authStatus
+      .pipe(takeUntil(this.destroySubject))
+      .subscribe(result => {
+        this.isLoggedIn = result;
+      })
+  }
+  onLogout(): void {
+    this.authService.logout();
+    this.router.navigate(["/"]);
+  }
 
   ngOnInit(): void {
   }
-
+  ngOnDestroy() {
+    this.destroySubject.next(true);
+    this.destroySubject.complete();
+  }
 }
