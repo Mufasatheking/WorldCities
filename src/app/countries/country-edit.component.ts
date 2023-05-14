@@ -90,6 +90,7 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
       }
       else {
         // ADD NEW mode
+        country.id = -1
         this.countryService
         .post(country)
           .subscribe(result => {

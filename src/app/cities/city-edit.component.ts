@@ -103,6 +103,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       }
       else {
         // ADD NEW mode
+        city.id = -1
         this.cityService
         .post(city)
           .subscribe(result => {
