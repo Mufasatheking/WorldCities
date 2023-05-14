@@ -17,6 +17,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { ConnectionServiceModule, ConnectionServiceOptionsToken, ConnectionServiceOptions } from 'angular-connection-service';
 
 @NgModule({
   declarations: [
@@ -41,11 +42,21 @@ import { environment } from '../environments/environment';
       // Register the ServiceWorker as soon as the app is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    ConnectionServiceModule
   ],
-  providers: [  { provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
-    multi: true }],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: ConnectionServiceOptionsToken,
+      useValue: <ConnectionServiceOptions>{
+        heartbeatUrl: environment.baseUrl + 'api/heartbeat',
+      }
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
