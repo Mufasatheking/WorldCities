@@ -1,5 +1,7 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-
+import {APOLLO_OPTIONS} from 'apollo-angular';
+import {HttpLink} from 'apollo-angular/http';
+import {InMemoryCache} from '@apollo/client/core';
 import { AngularMaterialModule } from './angular-material.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -56,6 +58,24 @@ import { ConnectionServiceModule, ConnectionServiceOptionsToken, ConnectionServi
       useValue: <ConnectionServiceOptions>{
         heartbeatUrl: environment.baseUrl + 'api/heartbeat',
       }
+    },
+    {
+      provide: APOLLO_OPTIONS,
+      useFactory: (httpLink: HttpLink) => {
+        return {
+          cache: new InMemoryCache({
+            addTypename: false
+          }),
+          link: httpLink.create({
+            uri: environment.baseUrl + 'api/graphql',
+          }),
+          defaultOptions: {
+            watchQuery: { fetchPolicy: 'no-cache' },
+            query: { fetchPolicy: 'no-cache' }
+          }
+        };
+      },
+      deps: [HttpLink],
     }],
   bootstrap: [AppComponent]
 })
