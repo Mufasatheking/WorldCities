@@ -12,12 +12,12 @@ export class AppComponent implements OnInit {
   title = 'WorldCities';
   hasNetworkConnection: boolean = true;
   hasInternetAccess: boolean = true;
-  constructor(private authService: AuthService, private connectionService: ConnectionService) { }
+  constructor(private authService: AuthService) { } //private connectionService: ConnectionService
   ngOnInit(): void {
-    this.connectionService.monitor().subscribe((currentState: any) => {
+   /* this.connectionService.monitor().subscribe((currentState: any) => {
       this.hasNetworkConnection = currentState.hasNetworkConnection;
       this.hasInternetAccess = currentState.hasInternetAccess;
-    });
+    });*/
     this.authService.init();
   }
   public isOnline() {

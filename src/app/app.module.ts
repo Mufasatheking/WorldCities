@@ -45,7 +45,7 @@ import { ConnectionServiceModule, ConnectionServiceOptionsToken, ConnectionServi
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    ConnectionServiceModule
+    //ConnectionServiceModule
   ],
   providers: [
     {
@@ -53,12 +53,12 @@ import { ConnectionServiceModule, ConnectionServiceOptionsToken, ConnectionServi
       useClass: AuthInterceptor,
       multi: true
     },
-    {
+    /*{
       provide: ConnectionServiceOptionsToken,
       useValue: <ConnectionServiceOptions>{
         heartbeatUrl: environment.baseUrl + 'api/heartbeat',
       }
-    },
+    },*/
     {
       provide: APOLLO_OPTIONS,
       useFactory: (httpLink: HttpLink) => {
